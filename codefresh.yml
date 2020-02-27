@@ -15,5 +15,5 @@ steps:
     stage: build
     image_name: yosefrow/codefresh-nginx
     working_directory: ./
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}'
+    tag: latest
     dockerfile: Dockerfile
