@@ -1,0 +1,26 @@
+#!/bin/bash -xe
+
+SAN="IP:127.0.0.1,IP:34.98.113.106,IP:35.197.204.32" #IP or DNS
+C="IL"
+ST="IL"
+O="codefresh-rancher"
+CN='*'
+
+openssl req \
+	-config <(
+		cat /etc/ssl/openssl.cnf <(
+			printf "[SAN]\nsubjectAltName=$SAN"
+		)
+	) \
+	-extensions SAN \
+	-subj "/C="$C"/ST="$ST"/O="$O"/CN="$CN \
+	-newkey rsa:2048 \
+	-nodes \
+	-keyout key.pem \
+	-x509 \
+	-days 365 \
+	-out certificate.pem
+
+cat key.pem certificate.pem | tee chain.pem
+
+openssl x509 -in chain.pem -text
